@@ -1,9 +1,12 @@
 import express from "express"
+
 import bookRouter from './routes/bookRoutes.js'
+import authRoutes from "./routes/usersRoutes.js";
+
 import mongoose from "mongoose";
 import {connectToDB} from './config/db.js'
 
-import authRoutes from './routes/usersRoutes.js'
+
 const app = express();
 const PORT = 5000;
 

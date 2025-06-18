@@ -1,17 +1,17 @@
 import express from "express";
 const bookRouter = express.Router();
 import { getBooksController, createBooksController, updateBooksController, deleteBooksController } from "../controllers/bookControllers.js";
-
+import { checkAuthorization } from "../middleware/checkAuthorization.js";
 // import bookControllers from "../controllers/bookControllers.js";  //default import for get use .get(bookControllers.getBooksController)
 
 bookRouter.route('/')
-    .get(getBooksController)
+    .get(checkAuthorization, getBooksController)
     .post(createBooksController)
 
 
 bookRouter.route('/:id')
     .put(updateBooksController)
-    .delete(deleteBooksController)
+    .delete(checkAuthorization ,deleteBooksController)
 
 
 

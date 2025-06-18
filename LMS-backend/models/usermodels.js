@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   address: String
 });
 
+
+//compare password with hashpassword for decryption
 userSchema.method("isPasswordValid", async function(password) {
   const hashedPassword = this.password;
   const result = await bcrypt.compare(password, hashedPassword);
