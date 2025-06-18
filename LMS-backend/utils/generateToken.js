@@ -11,7 +11,7 @@ export const generateToken = async (user) => {
     }
     catch (error) {
         console.log(error)
-        return error;
+        return;
     }
 
 };
