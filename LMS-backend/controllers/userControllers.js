@@ -14,7 +14,14 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    const newUser = await UserModel.create(reqBody);
+    const newUserInfo = {
+      email: reqBody.email,
+      phoneNumber: reqBody.phoneNumber,
+      password: reqBody.password,
+      address: reqBody.address,
+      name: reqBody.name,
+    }
+    const newUser = await UserModel.create(newUserInfo);
 
     return res.json({
       success: true,

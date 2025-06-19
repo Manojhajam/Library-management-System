@@ -2,11 +2,29 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
-  phoneNumber: String,
-  address: String
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
+  address: String,
+  role: {
+    type: String,
+    enum: ['Admin', 'Staff', 'Member'],
+    default: 'Member'
+  }
 });
 
 
