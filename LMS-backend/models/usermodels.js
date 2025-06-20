@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import Joi from "Joi";
+
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -44,6 +46,14 @@ userSchema.pre("save", async function() {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   this.password = hashedPassword;
+});
+
+const validateUserSchema = Joi.object({
+  name: Joi.string().required().message("Please Enter a Valid Name"),
+  email: Joi.string().email().required().message("Please enter a valid Email"),
+  password: Joi.string()
+    .pattern(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]{8,30}$/)
+    .required()
 });
 
 export const UserModel = mongoose.model("users", userSchema);
