@@ -102,51 +102,51 @@ export const loginUser = async (req, res) => {
   }
 };
 
-export const getUserController = async (req, res) => {
-  try {
-    const User = await UserModel.find();
-    res.json({
-      success: true,
-      data: User
-    });
-  } catch (error) {
-    console.log(error);
+// export const getUserController = async (req, res) => {
+//   try {
+//     const User = await UserModel.find();
+//     res.json({
+//       success: true,
+//       data: User
+//     });
+//   } catch (error) {
+//     console.log(error);
 
-    res.json({
-      success: false,
-      message: error.message
-    });
-  }
-};
+//     res.json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// };
 
-export const updateUser = async (req, res) => {
-  try {
-    const { id: userId } = req.params;
+// export const updateUser = async (req, res) => {
+//   try {
+//     const { id: userId } = req.params;
 
-    const reqBody = req.body;
+//     const reqBody = req.body;
 
-    const foundUser = await UserModel.findById(userId);
-    console.log(foundUser);
-    if (foundUser) {
-      const updatedUser = await UserModel.findByIdAndUpdate(userId, reqBody, {
-        new: true
-      });
+//     const foundUser = await UserModel.findById(userId);
+//     console.log(foundUser);
+//     if (foundUser) {
+//       const updatedUser = await UserModel.findByIdAndUpdate(userId, reqBody, {
+//         new: true
+//       });
 
-      return res.json({
-        success: true,
-        data: updatedUser
-      });
-    }
-    res.json({
-      success: false,
-      message: `User with ${userId} not found!`
-    });
-  } catch (error) {
-    console.log(error);
+//       return res.json({
+//         success: true,
+//         data: updatedUser
+//       });
+//     }
+//     res.json({
+//       success: false,
+//       message: `User with ${userId} not found!`
+//     });
+//   } catch (error) {
+//     console.log(error);
 
-    res.json({
-      success: false,
-      message: error.message
-    });
-  }
-};
+//     res.json({
+//       success: false,
+//       message: error.message
+//     });
+//   }
+// };
