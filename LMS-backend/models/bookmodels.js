@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Joi from "Joi";
+import Joi from "joi";
 
 const bookSchema = new mongoose.Schema({
   title: {
@@ -48,6 +48,7 @@ export const validatebookSchema = Joi.object({
   }),
   genre: Joi.string().optional(),
   noOfPages: Joi.number().optional(),
+    // .messages({"any.required": "Page no should require" }),
   availability: Joi.boolean().required()
 });
 
