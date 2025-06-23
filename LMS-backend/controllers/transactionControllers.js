@@ -3,7 +3,10 @@ import { BookModel } from "../models/bookmodels.js";
 
 export const getTransaction = async (req, res) => {
   try {
-    const transactions = await TransactionModel.find();
+    const transactions = await TransactionModel.find()
+      .populate('issuedBy')
+      .populate('issuedTo')
+      .populate("book");
 
     res.json({
       success: true,
@@ -36,7 +39,7 @@ export const createTransaction = async (req, res) => {
       });
     }
 
-    const bookExists = BookModel.findById(bookId);
+    const bookExists = await BookModel.findById(bookId);
 
     if (!bookExists || !bookExists.availability) {
       return res.json({
@@ -133,7 +136,7 @@ export const updateTransactionStatus = async (req, res) => {
     if (!transaction) {
       return res.json({
         success: false,
-        message: "Looks like the issue order doesnot exist!"
+        message: "Looks like the issue order does not exist!"
       });
     }
 
