@@ -102,22 +102,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// export const getUserController = async (req, res) => {
-//   try {
-//     const User = await UserModel.find();
-//     res.json({
-//       success: true,
-//       data: User
-//     });
-//   } catch (error) {
-//     console.log(error);
-
-//     res.json({
-//       success: false,
-//       message: error.message
-//     });
-//   }
-// };
 
 export const updateUser = async (req, res) => {
   try {
@@ -133,6 +117,14 @@ export const updateUser = async (req, res) => {
         message: `User with ${userId} not found!`
       });
     }
+
+    if (foundUser._id.toString() !== req.user._id.toString() && !["Admin", "Staff"].includes(req.user.role)) {
+      return res.json({
+        success: false,
+        message: "You cannot update this user"
+      }
+  )
+}
 
     const updatedUser = await UserModel.findByIdAndUpdate(userId, reqBody, {
       new: true
@@ -189,3 +181,54 @@ export const deleteUser = async (req, res) => {
   
 }
 
+
+export const updatePassword = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const { newPassword, oldPassword } = req.body;
+  
+    const foundUser = await UserModel.findById(userId);
+  
+      if (!foundUser) {
+        return res.json({
+          success: false,
+          message: `User with ${userId} not found!`
+        });
+    }
+const passwordMatched = await foundUser.isPasswordValid(oldPassword)
+    if (!passwordMatched) {
+      return res.json({
+        success: false,
+        message: "Old Password doesnot matched"
+  })
+}
+    
+    foundUser.password = newPassword;
+
+    foundUser.save();
+
+    const userData = {
+      name: foundUser.name,
+      address: foundUser.address,
+      phoneNumber: foundUser.phoneNumber,
+      role: foundUser.role,
+      email: foundUser.email,
+      _id: foundUser._id
+    }
+    
+    res.json({
+      success: true,
+      message: "Password Updated Successfully",
+      data: userData
+    })
+
+  } catch (error) {
+    console.log(error);
+
+    res.json({
+      success: false,
+      message: error.message
+    });
+  }
+}
