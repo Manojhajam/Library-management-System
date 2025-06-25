@@ -5,10 +5,16 @@ import authRoutes from "./routes/usersRoutes.js";
 import transactioRoutes from "./routes/transactionRoutes.js"
 
 import mongoose from "mongoose";
-import {connectToDB} from './config/db.js'
+import { connectToDB } from './config/db.js'
+import dotenv from "dotenv"
 
 
 const app = express();
+
+dotenv.config();  //read the .env file
+
+const mongoURI = process.env.MONGO_URI;
+
 const PORT = 5000;
 
 

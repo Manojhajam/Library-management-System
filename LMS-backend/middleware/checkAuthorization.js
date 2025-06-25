@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { jwtsecretKey } from "../utils/generateToken.js";
 import { UserModel } from "../models/usermodels.js";
 
 export const checkAuthorization = async (req, res, next) => {
@@ -15,7 +14,7 @@ export const checkAuthorization = async (req, res, next) => {
             )
         }
 
-        const decoded = await jwt.verify(token, jwtsecretKey)
+        const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY)
 
         if (!decoded._id) {
            return res.json({
