@@ -118,7 +118,7 @@ export const updateUser = async (req, res) => {
       });
     }
 
-    if (foundUser._id.toString() !== req.user._id.toString() && !["Admin", "Staff"].includes(req.user.role)) {
+    if (foundUser._id.toString() !== req.user._id.toString() && !["Admin"].includes(req.user.role)) {
       return res.json({
         success: false,
         message: "You cannot update this user"
@@ -202,7 +202,14 @@ const passwordMatched = await foundUser.isPasswordValid(oldPassword)
         success: false,
         message: "Old Password doesnot matched"
   })
-}
+    }
+    if (foundUser._id.toString() !== req.user._id.toString() && !["Admin"].includes(req.user.role)) {
+      return res.json({
+        success: false,
+        message: "You cannot update the password"
+      });
+    }
+
     
     foundUser.password = newPassword;
 
