@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { getTransaction, createTransaction, updatetransaction, deleteTransaction ,updateTransactionStatus} from "../controllers/transactionControllers.js";
+import { getTransaction, createTransaction, updatetransaction, deleteTransaction ,updateTransactionStatus, returnBook} from "../controllers/transactionControllers.js";
 import { checkAuthorization } from "../middleware/checkAuthorization.js";
 import { checkStaffLevelPermissions } from "../middleware/checkPermission.js";
 
@@ -11,7 +11,7 @@ router.route("/")
 
 
 router
-  .route("/:transactionid")
+  .route("/:transactionId")
   .put(checkAuthorization, checkStaffLevelPermissions, updatetransaction)
   .patch(
     checkAuthorization,
@@ -19,5 +19,7 @@ router
     updateTransactionStatus
   )
   .delete(checkAuthorization, checkStaffLevelPermissions, deleteTransaction);
+
+  router.route("/:transactionId/return").patch(checkAuthorization, checkStaffLevelPermissions, returnBook)
 
 export default router;

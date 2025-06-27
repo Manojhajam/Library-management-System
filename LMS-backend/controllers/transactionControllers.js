@@ -22,8 +22,11 @@ export const getTransaction = async (req, res) => {
 
 export const createTransaction = async (req, res) => {
   try {
-    const { bookId, issuedTo } = req.body;
+    const { bookId, issuedTo, estimatedReturnDate } = req.body;
     const requestiongUser = req.user;
+    const defaultIssuanceAllowedDays = 14;
+    const defaultEstimatedReturnDate = new Date(Date.now() + defaultIssuanceAllowedDays * 24 * 60 * 60 * 1000).toISOString();
+
 
     if (!bookId) {
       return res.json({
@@ -52,8 +55,13 @@ export const createTransaction = async (req, res) => {
       issuedBy: requestiongUser._id,
       issuedTo,
       book: bookId,
-      status: requestiongUser.role === "Member" ? "Pending" : "Approved"
+      status: requestiongUser.role === "Member" ? "Pending" : "Approved",
+      estimatedReturnDate: estimatedReturnDate || defaultEstimatedReturnDate
     });
+
+    bookExists.availability = false;  //change one variable
+    await bookExists.save();
+
     
      return res.json({
           success: true,
@@ -195,3 +203,48 @@ export const deleteTransaction = async (req, res) => {
     });
   }
 };
+
+
+export const returnBook = async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+    const { returnTo } = req.body;
+
+    const foundTransaction = await TransactionModel.findById(transactionId);
+
+    if (!foundTransaction) {
+      return res.json({
+        success: false,
+        message: "No issue order found!!!"
+      })
+    }
+
+
+    foundTransaction.returnDate = new Date(Date.now()).toISOString();
+
+    // foundTransaction.returnDate = true;
+
+    const issuedBook = await BookModel.findById(foundTransaction.book);
+
+    issuedBook.availability = true;
+    
+    foundTransaction.returnTo = returnTo;
+
+    await foundTransaction.save();
+
+    await issuedBook.save();
+
+    res.json({
+      success: true,
+      message: "Book returned successfully!!!",
+      data: foundTransaction
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.json({
+      success: false,
+      message: error.message
+    });
+  }
+}

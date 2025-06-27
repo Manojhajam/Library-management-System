@@ -24,8 +24,16 @@ const transactionSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  estimatedReturnDate: {
+    type: Date
+  },
   returnDate: {
     type: Date
+  },
+  returnTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
+    ref: "users"
   },
   status: {
     type: String,
@@ -34,4 +42,7 @@ const transactionSchema = new mongoose.Schema({
   }
 });
 
-export const TransactionModel = mongoose.model("transaction", transactionSchema)
+export const TransactionModel = mongoose.model(
+  "transaction",
+  transactionSchema
+);
