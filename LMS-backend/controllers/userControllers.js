@@ -9,7 +9,7 @@ export const registerUser = async (req, res) => {
     const validatedUser = validateUserSchema.validate(reqBody)
 
     if (validatedUser.error) {
-      res.json({
+     return res.ststus(400).json({
         success: false,
         message: validatedUser.error.message,
       })
@@ -17,7 +17,7 @@ export const registerUser = async (req, res) => {
     const foundUser = await UserModel.find({ email: reqBody.email });
 
     if (foundUser.length > 0) {
-      return res.json({
+      return res.status(409).json({
         success: false,
         message: `User with email: ${reqBody.email} already exits`
       });
@@ -32,14 +32,22 @@ export const registerUser = async (req, res) => {
     // }
     const newUser = await UserModel.create(validatedUser.value);
 
-    return res.json({
+    const userData = {
+      name: newUser.name,
+      email: newUser.email,
+      address: newUser.address,
+      phoneNumber: newUser.phoneNumber,
+      _id: newUser._id,
+      role: newUser.role,
+    }
+    return res.status(201).json({
       success: true,
-      data: newUser,
+      data: userData,
       message: `Dear ${newUser.name} Welcome to Library management System`
     });
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -53,7 +61,7 @@ export const loginUser = async (req, res) => {
     console.log(foundUser);
 
     if (!foundUser) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Invalid Credential"
       });
@@ -66,7 +74,7 @@ export const loginUser = async (req, res) => {
      const token = await generateToken({ _id: foundUser?._id });
 
       if (!token) {
-       return res.json({
+       return res.status(400).json({
           success: false,
           message:"Something went wrong!!"
         })
@@ -79,7 +87,7 @@ export const loginUser = async (req, res) => {
         phoneNumber: foundUser.phoneNumber
       };
 
-      return res.json({
+      return res.status(200).json({
         success: true,
         data: userData,
         message: `Welcome back ${foundUser.name}`,
@@ -87,14 +95,14 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    res.json({
+    res.status(400).json({
       success: true,
       message: "Invalid Credentials!!!"
     });
   }
   
   catch (error) {
-    console.log(error);
+    console.status(500).log(error);
     res.json({
       success: false,
       message: error.message
@@ -112,14 +120,14 @@ export const updateUser = async (req, res) => {
     const foundUser = await UserModel.findById(userId);
 
     if (!foundUser) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: `User with ${userId} not found!`
       });
     }
 
     if (foundUser._id.toString() !== req.user._id.toString() && !["Admin"].includes(req.user.role)) {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "You cannot update this user"
       }
@@ -130,7 +138,7 @@ export const updateUser = async (req, res) => {
       new: true
     });
 
-    res.json({
+    res.status(200).json({
       success: false,
       data: updatedUser,
       message: "User Updated Successfully"
@@ -138,7 +146,7 @@ export const updateUser = async (req, res) => {
   } catch (error) {
     console.log(error);
 
-    res.json({
+    res.status(400).json({
       success: false,
       message: error.message
     });
@@ -155,7 +163,7 @@ export const deleteUser = async (req, res) => {
     const foundUser = await UserModel.findById(userId);
   
       if (!foundUser) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: `User with ${userId} not found!`
         });
@@ -163,7 +171,7 @@ export const deleteUser = async (req, res) => {
     
     const deletedUser = await UserModel.findByIdAndDelete(userId)
   
-    res.json(
+    res.status(200).json(
       {
         success: true,
         data: deletedUser,
@@ -173,7 +181,7 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     console.log(error);
 
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -191,20 +199,20 @@ export const updatePassword = async (req, res) => {
     const foundUser = await UserModel.findById(userId);
   
       if (!foundUser) {
-        return res.json({
+        return res.status(400).json({
           success: false,
           message: `User with ${userId} not found!`
         });
     }
 const passwordMatched = await foundUser.isPasswordValid(oldPassword)
     if (!passwordMatched) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Old Password doesnot matched"
   })
     }
     if (foundUser._id.toString() !== req.user._id.toString() && !["Admin"].includes(req.user.role)) {
-      return res.json({
+      return res.status(403).json({
         success: false,
         message: "You cannot update the password"
       });
@@ -224,7 +232,7 @@ const passwordMatched = await foundUser.isPasswordValid(oldPassword)
       _id: foundUser._id
     }
     
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Password Updated Successfully",
       data: userData
@@ -233,7 +241,7 @@ const passwordMatched = await foundUser.isPasswordValid(oldPassword)
   } catch (error) {
     console.log(error);
 
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });

@@ -8,7 +8,7 @@ export const getBooksController = async (req, res) => {
     const user = req.user;
 
     const books = await BookModel.find();
-    res.json({
+    res.status(200).json({
       success: true,
       data: books,
       
@@ -16,7 +16,7 @@ export const getBooksController = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: true,
       message: error.message
     });
@@ -28,16 +28,16 @@ export const createBooksController = async (req, res) => {
 
   const book = await BookModel.create(reqBody);
   try {
-    res.json({
+    res.status(201).json({
       success: true,
       data: book
     });
   } catch (error) {
     console.log(error);
-    res.json({
-      success: true,
-      message: error.message
-    });
+    res.status(500).json({
+        success: true,
+        message: error.message
+      });
   }
 };
 
@@ -60,20 +60,20 @@ export const updateBooksController = async (req, res) => {
         }
       );
 
-      return res.json({
+      return res.status(200).json({
         success: true,
         data: UpdatedBook
       });
     }
 
-    res.json({
-      success: false,
-      message: `Book with id ${bookId} not found`
-    });
+    res.status(400).json({
+        success: false,
+        message: `Book with id ${bookId} not found`
+      });
 
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -91,13 +91,13 @@ export const deleteBooksController = async (req, res) => {
     const deleteBook = await BookModel.findByIdAndDelete(bookId)
       console.log(deleteBook);
   
-      return res.json({
+      return res.status(200).json({
         success: true,
         message: `${foundBook.title} has deleted`
       })
     }
     
-    res.json({
+    res.status(400).json({
       success: false,
       message: `Book with id: ${bookId} not found!`,
     })
@@ -105,7 +105,7 @@ export const deleteBooksController = async (req, res) => {
   catch (error) {
     console.log(error)
 
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
     })

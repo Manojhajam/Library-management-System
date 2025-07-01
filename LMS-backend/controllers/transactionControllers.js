@@ -8,12 +8,12 @@ export const getTransaction = async (req, res) => {
       .populate('issuedTo')
       .populate("book");
 
-    res.json({
+    res.status(200).json({
       success: true,
       data: transactions
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -29,14 +29,14 @@ export const createTransaction = async (req, res) => {
 
 
     if (!bookId) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "No book issued if no book needed!"
       });
     }
 
     if (!issuedTo) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "No book issued if no reader exists!"
       });
@@ -63,14 +63,14 @@ export const createTransaction = async (req, res) => {
     await bookExists.save();
 
     
-     return res.json({
+     return res.status(201).json({
           success: true,
           data: newTransaction,
       })
 
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -82,7 +82,7 @@ export const updatetransaction = async (req, res) => {
   try {
     const { transactionId } = req.body;
     if (!transactionId) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Please mention the issue order!",
       });
@@ -91,7 +91,7 @@ export const updatetransaction = async (req, res) => {
     const transaction = await TransactionModel.findById(transactionId);
 
     if (!transaction) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Looks like the issue order doesnot exist!",
       });
@@ -105,14 +105,14 @@ export const updatetransaction = async (req, res) => {
       }
     );
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       data: updatedTransaction,
       message: "Issue order Updated Successfully",
     });
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -126,14 +126,14 @@ export const updateTransactionStatus = async (req, res) => {
     const { status } = req.body;
 
     if (!transactionId) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Please mention the issue order!"
       });
     }
 
     if (!status) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Updated status is required"
       });
@@ -142,7 +142,7 @@ export const updateTransactionStatus = async (req, res) => {
     const transaction = await TransactionModel.findById(transactionId);
 
     if (!transaction) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Looks like the issue order does not exist!"
       });
@@ -152,14 +152,14 @@ export const updateTransactionStatus = async (req, res) => {
 
     await transaction.save();
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       data: transaction,
       message: "Issue order Updated Successfully"
     });
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -174,7 +174,7 @@ export const deleteTransaction = async (req, res) => {
     const { transactionId } = req.params;
 
     if (!transactionId) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Please mention the issue order!"
       });
@@ -183,7 +183,7 @@ export const deleteTransaction = async (req, res) => {
     const transaction = await TransactionModel.findById(transactionId);
 
     if (!transaction) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Looks like the issue order doesnot exist!"
       });
@@ -191,13 +191,13 @@ export const deleteTransaction = async (req, res) => {
 
     await TransactionModel.findByIdAndDelete(transactionId);
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: "Issue order deleted successfully!"
     });
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
@@ -208,12 +208,13 @@ export const deleteTransaction = async (req, res) => {
 export const returnBook = async (req, res) => {
   try {
     const { transactionId } = req.params;
-    const { returnTo } = req.body;
+    // const { returnTo } = req.body;
+    const returnTo = req.user._id
 
     const foundTransaction = await TransactionModel.findById(transactionId);
 
     if (!foundTransaction) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "No issue order found!!!"
       })
@@ -222,19 +223,19 @@ export const returnBook = async (req, res) => {
 
     foundTransaction.returnDate = new Date(Date.now()).toISOString();
 
-    // foundTransaction.returnDate = true;
+    foundTransaction.returned = true;
+    foundTransaction.returnTo = returnTo;
 
     const issuedBook = await BookModel.findById(foundTransaction.book);
 
     issuedBook.availability = true;
     
-    foundTransaction.returnTo = returnTo;
-
+    
     await foundTransaction.save();
 
     await issuedBook.save();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Book returned successfully!!!",
       data: foundTransaction
@@ -242,7 +243,7 @@ export const returnBook = async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: error.message
     });
