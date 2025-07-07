@@ -13,7 +13,7 @@ import { checkStaffLevelPermissions } from "../middleware/checkPermission.js";
 
 bookRouter
   .route("/")
-  .get(checkAuthorization, getBooksController)
+  .get(getBooksController)
   .post(checkAuthorization, checkStaffLevelPermissions, createBooksController);
 
 bookRouter
