@@ -1,5 +1,5 @@
 import express from "express"
-
+import cors from "cors";
 import bookRouter from './routes/bookRoutes.js'
 import authRoutes from "./routes/usersRoutes.js";
 import transactioRoutes from "./routes/transactionRoutes.js"
@@ -20,6 +20,7 @@ const PORT = 5000;
 
 connectToDB();
 
+app.use(cors())
 app.use(express.json());
 
 app.get("/books", (req, res) => {
