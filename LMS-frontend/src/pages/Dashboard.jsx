@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import BookCard from "../components/BookCard";
+import DashboardCard from "../components/DashboardCard";
 
 const Dashboard = () => {
 
@@ -21,17 +22,26 @@ const Dashboard = () => {
  } catch (error) {
   console.log(error)
  }
-    };
+    };  
     
     useEffect(() => {
         fetchBooks();
     }, []);
 
-  return <div style={{ padding: "0px 10px" }}>
-    <h1 style={{ marginBottom: 60, marginTop: 60 }}>Welcome, User</h1>
-    <h2 style={{ marginBottom: 20, marginTop: 60 }}>Books ({books.length})</h2>
+  return <div className="px-4">
+      <h1 className="pt-20 pb-4 text-3xl py-20 font-bold ">Welcome, User</h1>
+      <div className="flex justify-between mb-4">
+        <DashboardCard title="Books" count={30} />
+        <DashboardCard title="Members" count={40} />
+        <DashboardCard title="Issued Books" count={20} />
+        <DashboardCard title="Return Due" count={3} />
+      </div>
 
-      <div style={{display: "flex", gap: 10, flexWrap: "wrap"}}>
+      <h2 className="mb-10 text-2xl font-semibold">
+        Books ({books.length})
+      </h2>
+
+      <div className="flex gap-6 flex-wrap">
         {books.map(book => {
           return <BookCard key={book._id} book={book} />;
         })}
