@@ -3,11 +3,11 @@ import React, { useState } from "react";
 
 const Card = ({children, customClass}) => {
   return (
-
-
+    
     <div className={"px-10 py-10 bg-gray-200 rounded-lg"+ " " + customClass}
      
-      >
+    >
+    
     {children}
     </div>
   );
