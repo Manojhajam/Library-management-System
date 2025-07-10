@@ -8,10 +8,6 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
-      {/* <Sidebar />
-      <div className="ml-[250px]">
-        <Dashboard />
-      </div> */}
         <PageRoutes/>
       </BrowserRouter>
       
