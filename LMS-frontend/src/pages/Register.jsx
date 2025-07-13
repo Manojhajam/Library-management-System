@@ -2,20 +2,41 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { User } from "lucide-react";
 
-
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [address, setaddress] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("")
 
-  const handleRegister = (event) => {
+  const handleRegister = async event => {
     event.preventDefault();
-    event.reset();
-    console.log(name, email, address, password);
+    console.log("name", name, email, address, password);
+    
+    
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password,
+          address,
+          phoneNumber
+        })
+      });
+      const responseData = response.json();
+      console.log("API",responseData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  return <div className="bg-gradient-to-t bg-gray-500 to-white items-center w-screen flex justify-center pt-5">
+  return (
+    <div className="bg-gradient-to-t bg-gray-500 to-white items-center w-screen flex justify-center pt-5">
       <div>
         <div className="mb-8">
           <div className="rounded-full bg-black w-15 h-15 p-3 mx-auto mb-5" />
@@ -37,48 +58,93 @@ const Register = () => {
             <label htmlFor="name" className="mb-2">
               Name
             </label>
-          <input id="name" value={name} placeholder={'Enter your name'} className="border w-full p-2 rounded-lg" onChange={event => {
+            <input
+              id="name"
+              value={name}
+              placeholder={"Enter your name"}
+              className="border w-full p-2 rounded-lg"
+              onChange={event => {
                 setName(event.target.value);
-              }} />
+              }}
+            />
           </div>
 
           <div className="flex flex-col">
             <label htmlFor="email" className="mb-2">
               E-mail
             </label>
-            <input id="email" value={email} placeholder="Enter your email" className="border w-full p-2 rounded-lg" onChange={event => {
+            <input
+              id="email"
+              value={email}
+              placeholder="Enter your email"
+              className="border w-full p-2 rounded-lg"
+              onChange={event => {
                 setEmail(event.target.value);
-              }} />
+              }}
+            />
+          </div>
+
+
+          <div className="flex flex-col">
+            <label htmlFor="phone" className="mb-2">
+              Phone Number
+            </label>
+            <input
+              id="phone"
+              value={phoneNumber}
+              placeholder="Enter your email"
+              className="border w-full p-2 rounded-lg"
+              onChange={event => {
+                setphoneNumber(event.target.value);
+              }}
+            />
           </div>
 
           <div className="flex flex-col">
             <label htmlFor="address" className="mb-2">
               Address
             </label>
-            <input id="address" value={address} placeholder="Enter your address" className="border w-full p-2 rounded-lg" onChange={event => {
+            <input
+              id="address"
+              value={address}
+              placeholder="Enter your address"
+              className="border w-full p-2 rounded-lg"
+              onChange={event => {
                 setaddress(event.target.value);
-              }} />
+              }}
+            />
           </div>
 
           <div className="flex flex-col">
             <label htmlFor="password" className="mb-2">
               Password
             </label>
-            <input id="password" value={password} placeholder="Enter your password" className="border w-full p-2 rounded-lg" onChange={event => {
+            <input
+              id="password"
+              value={password}
+              placeholder="Enter your password"
+              className="border w-full p-2 rounded-lg"
+              onChange={event => {
                 setPassword(event.target.value);
-              }} />
+              }}
+            />
           </div>
-          <button className="w-full bg-black text-white p-2 hover:bg-gray-800 rounded" onClick={handleRegister}>
+          <button
+            className="w-full bg-black text-white p-2 hover:bg-gray-800 rounded"
+            onClick={handleRegister}
+          >
             Sign Up
           </button>
           <p>
-            Already Have an Account <span className="underline text-blue-900 font-bold  ">
+            Already Have an Account{" "}
+            <span className="underline text-blue-900 font-bold  ">
               {" "}<Link to={"/login"}>Log in</Link>{" "}
             </span>
           </p>
         </form>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default Register;
