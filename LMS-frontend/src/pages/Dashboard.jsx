@@ -16,7 +16,7 @@ const Dashboard = () => {
 
     const responseData = await response.json();
     
-  console.log(responseData);
+  // console.log(responseData);
   
   setBooks(responseData.data)
  } catch (error) {

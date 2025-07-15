@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, Navigate } from "react-router";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
+
+const {user, setUser} = useContext(AuthContext)
 
 const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -22,14 +26,25 @@ const [email, setEmail] = useState("")
           password
         })
       })
-      const responseData = response.json();
+      const responseData =await response.json();
       console.log(responseData)
+      if (responseData?.success) {
+        
+        setUser(responseData.data);
+        const token = responseData.token;
+
+        localStorage.setItem('token', token)
+      }
+
     } catch (error) {
       console.log(error)
     }
   }
 
-  return <div className="bg-gradient-to-t bg-gray-500 to-white items-center h-screen w-screen flex justify-center">
+    if(user) {
+         return <Navigate to="/" replace/>    
+        } else {
+        return <div className="bg-gradient-to-t bg-gray-500 to-white items-center h-screen w-screen flex justify-center">
       <div>
         <div className="mb-8">
           <div className="rounded-full bg-black w-12 h-12 p-4 mx-auto mb-6" />
@@ -74,7 +89,8 @@ const [email, setEmail] = useState("")
           </p>
         </form>
       </div>
-    </div>;
+      </div>;
+  }
 };
 
 export default Login;

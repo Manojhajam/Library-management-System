@@ -7,17 +7,22 @@ import Transaction from "../pages/Transaction";
 import Members from "../pages/Members";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const PageRoutes = () => {
-    return <Routes>
-        <Route path="/" element={<Layout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="/transactions" element={<Transaction/> } />
-            <Route path="/members" element={<Members/> } />
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route element={<ProtectedRoutes />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/transactions" element={<Transaction />} />
+          <Route path="/members" element={<Members />} />
         </Route>
-        <Route path="/login" element={<Login/> } />
-        <Route path="/register" element={<Register/> } />
-      </Routes>;
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
+  );
 };
 
 export default PageRoutes;
