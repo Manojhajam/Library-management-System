@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from "react";
 import BookCard from "../components/BookCard";
 import DashboardCard from "../components/DashboardCard";
+import { FiBook } from "react-icons/fi";
+import { FiUsers } from "react-icons/fi";
+import { FiTrendingUp } from "react-icons/fi";
+import { FiClock } from "react-icons/fi";
 
 const Dashboard = () => {
 
@@ -31,10 +35,10 @@ const Dashboard = () => {
   return <div className="px-4">
       <h1 className="pt-20 pb-4 text-3xl py-20 font-bold ">Welcome, User</h1>
       <div className="flex justify-between mb-4">
-        <DashboardCard title="Books" count={30} />
-        <DashboardCard title="Members" count={40} />
-        <DashboardCard title="Issued Books" count={20} />
-        <DashboardCard title="Return Due" count={3} />
+        <DashboardCard title="Books" count={30} Icon={<FiBook size={38} color="blue" />} />
+        <DashboardCard title="Members" count={40} Icon={<FiUsers size={38} color="green" />} />
+        <DashboardCard title="Issued Books" count={20} Icon={<FiTrendingUp size={38} color="orange" />} />
+        <DashboardCard title="Return Due" count={25} Icon={<FiClock size={38} color="red" />} />
       </div>
 
       <h2 className="mb-10 text-2xl font-semibold">

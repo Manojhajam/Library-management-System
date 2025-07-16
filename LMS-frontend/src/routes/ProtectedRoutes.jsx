@@ -1,21 +1,20 @@
 import React, { useContext } from 'react'
 import { Navigate, Outlet } from 'react-router'
-import { userInfo } from '../userInfo'
 import { AuthContext } from '../context/AuthContext'
+import Loader from '../components/common/Loader'
 
 
 
 const ProtectedRoutes = () => {
-    const information = useContext(AuthContext)
+    const {user, loading} = useContext(AuthContext)
     
-  console.log(information);
   
-  if (information.loading)
+  if (loading)
   {
-    return <div>Loading...</div>
+    return <Loader/>
   }
 
-    if(information?.user) {
+    if( user ) {
       return <Outlet/>
     } else {
         return <Navigate to="/login" replace/>
