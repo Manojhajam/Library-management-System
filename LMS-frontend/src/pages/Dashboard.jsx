@@ -20,7 +20,7 @@ const Dashboard = () => {
 
     const responseData = await response.json();
     
-  // console.log(responseData);
+  console.log(responseData);
   
   setBooks(responseData.data)
  } catch (error) {
@@ -32,8 +32,10 @@ const Dashboard = () => {
         fetchBooks();
     }, []);
 
-  return <div className="px-4">
-      <h1 className="pt-20 pb-4 text-3xl py-20 font-bold ">Welcome, User</h1>
+  return <div className="px-4 pb-4">
+      <h1 className="py-8 text-3xl font-bold ">
+        Dashboard
+      </h1>
       <div className="flex justify-between mb-4">
         <DashboardCard title="Books" count={30} Icon={<FiBook size={38} color="blue" />} />
         <DashboardCard title="Members" count={40} Icon={<FiUsers size={38} color="green" />} />

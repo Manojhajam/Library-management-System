@@ -2,12 +2,13 @@ import React from "react";
 import Card from "./common/Card";
 
 const DashboardCard = ({ title, count, Icon }) => {
-  return (
-    <div>
+  return <div>
       <Card customClass={"!p-3 !px-4"}>
-        <div className="flex items-center  gap-32">
+        <div className="flex items-center gap-40">
           <div>
-            <p text-sm>{title}</p>
+            <p className="text-sm">
+              {title}
+            </p>
             <h3 className="text-3xl m-0 p-0 font-bold">
               {count}
             </h3>
@@ -17,8 +18,7 @@ const DashboardCard = ({ title, count, Icon }) => {
           </div>
         </div>
       </Card>
-    </div>
-  );
+    </div>;
 };
 
 export default DashboardCard;
