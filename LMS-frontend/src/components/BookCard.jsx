@@ -2,38 +2,44 @@ import React, { useState } from "react";
 import Card from "./common/Card";
 
 const BookCard = ({ book }) => {
-  const { title, author, publications, genre, availability, isbn} = book;
+  const { title, author, publications, genre, availability, isbn } = book;
 
-  return <Card customClass="
-  w-[396px]
-   flex justify-between">
+  return (
+    <Card customClass="
+  w-[400px]">
       <div>
-        <h4 className="text-2xl font-bold mb-4 ">
-          {title}
-        </h4>
+        <div className="flex items-center justify-between">
+          <h4 className="text-2xl font-bold mb-4 ">
+            {title}
+          </h4>
+
+          <div>
+            {availability
+              ? <p className="text-white text-capitalize px-2 w-fit text-sm font-semibold bg-black rounded-2xl">
+                  Available
+                </p>
+              : <p className="text-white text-capitalize px-2 w-fit text-sm font-semibold bg-red-600 rounded-2xl">
+                  Borrowed
+                </p>}
+          </div>
+        </div>
         <p className="mb-2 text-lg">
           {author}
         </p>
         <p className="text-xs">
           ISBN: {isbn}
         </p>
-        <p className="border border-gray-500 w-fit px-2 mt-4 rounded-2xl text-sm font-semibold">
-          {genre}
-        </p>
-      </div>
-      <div className="flex flex-col justify-between items-end">
-        {availability ? <p className="text-white text-capitalize px-2 w-fit text-sm font-semibold bg-black rounded-2xl">
-              Available
-            </p> : <p className="text-white text-capitalize px-2 w-fit text-sm font-semibold bg-red-600 rounded-2xl">
-              Borrowed
-            </p>}
-        <div>
-          <p className="">
-          {new Date(publications).getFullYear()}
-        </p>
+        <div className="mt-5 flex justify-between">
+          <p className="border border-gray-500 w-fit px-2  rounded-2xl text-sm font-semibold">
+            {genre}
+          </p>
+          <p>
+            {new Date(publications).getFullYear()}
+          </p>
         </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
 
 export default BookCard;

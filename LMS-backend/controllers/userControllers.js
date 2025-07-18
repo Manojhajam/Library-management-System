@@ -9,7 +9,7 @@ export const registerUser = async (req, res) => {
     const validatedUser = validateUserSchema.validate(reqBody)
 
     if (validatedUser.error) {
-     return res.ststus(400).json({
+     return res.status(400).json({
         success: false,
         message: validatedUser.error.message,
       })
