@@ -27,8 +27,41 @@ const columns = [
   {
     label: "Returned",
     key: "returned",
-    renderDetail: (row) => {
-      return row.returned ? "Yes" : "No";
+   renderDetail: (row) => {
+      const returnBook = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch(
+            `http://localhost:5003/api/transactions/${row._id}/return`,
+            {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const responseData = await response.json();
+
+          if (responseData.success) {
+            console.log(responseData);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      return Boolean(row.returned) ? (
+        "Yes"
+      ) : (
+        <button
+          className="px-3 py-2 bg-green-300 hover:bg-green-300/90 rounded-lg cursor-pointer"
+          onClick={returnBook}
+        >
+          Return
+        </button>
+      );
     },
   },
   {

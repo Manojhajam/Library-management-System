@@ -13,6 +13,6 @@ router.route('/:userId')
 .delete(checkAuthorization, deleteUser)
 
 
-router.route('/profile').post(checkAuthorization, getProfile);
+router.route('/profile').get(checkAuthorization, getProfile);
 
 export default router;
