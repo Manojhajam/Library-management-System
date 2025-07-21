@@ -22,6 +22,13 @@ const columns = [
     ),
   },
   {
+    label: "Role",
+    key: "role",
+    renderDetail: (row) => {
+      return row?.role;
+    }
+  },
+  {
     label: "Address",
     key: "address",
     renderDetail: (row) => {
@@ -34,12 +41,14 @@ const Members = () => {
 const [members, setMembers] = useState([])
 
   const fetchMembers = async () => {
-  try {
+    try {
+    const token = localStorage.getItem("token");
     const response = await fetch('http://localhost:5000/api/members', {
       method: 'GET',
       headers: {
-        "Content-Type": "application/json"
-      }
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
     });
 
     const responseData = await response.json();
@@ -57,7 +66,7 @@ if (responseData.success) {
   
   useEffect(() => {
     fetchMembers();
-  })
+  },[])
 
   return <div className="px-2">
       <h1 className="text-5xl mb-8">Members</h1>

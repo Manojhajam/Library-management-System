@@ -4,7 +4,11 @@ import { UserModel } from "../models/usermodels.js";
 export const checkAuthorization = async (req, res, next) => {
     
     try {
-        const token = req?.body?.token;
+        // const token = req?.body?.token;
+
+       const token = req.headers.authorization?.split(" ").pop();
+       console.log("token", token)
+       
 
         if (!token) {
             return res.json({

@@ -16,11 +16,12 @@ const AuthProvider = ({ children }) => {
       const response = await fetch("http://localhost:5000/api/auth/profile", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          token: token
-        })
+        // body: JSON.stringify({
+        //   token: token
+        // })
       });
 
       const responseData = await response.json();
