@@ -1,11 +1,12 @@
 import { TransactionModel } from "../models/transactionModel.js";
 import { BookModel } from "../models/bookmodels.js";
 
+
 export const getTransaction = async (req, res) => {
   try {
     const transactions = await TransactionModel.find()
       .populate('issuedBy')
-      .populate('issuedTo')
+      .populate('issuedTo')       
       .populate("book");
 
     res.status(200).json({
@@ -41,6 +42,7 @@ export const createTransaction = async (req, res) => {
         message: "No book issued if no reader exists!"
       });
     }
+
 
     const bookExists = await BookModel.findById(bookId);
 
