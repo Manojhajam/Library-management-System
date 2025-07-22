@@ -213,7 +213,7 @@ export const returnBook = async (req, res) => {
     // const { returnTo } = req.body;
     const returnTo = req.user._id
 
-    const foundTransaction = await TransactionModel.findById(transactionId);
+    const foundTransaction = await TransactionModel.findById(transactionId).populate('book').populate(issuedto).populate(issuedBy);
 
     if (!foundTransaction) {
       return res.status(400).json({

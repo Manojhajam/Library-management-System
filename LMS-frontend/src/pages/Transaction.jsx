@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Table from "../components/common/Table";
 import Card from "../components/common/Card";
 
-const columns = [
+const getTransactionColumn = [
   {
     label: "Book",
     key: "book",
@@ -20,6 +20,13 @@ const columns = [
   {
     label: "Issued By",
     key: "issuedBy",
+    renderDetail: (row) => {
+      return row?.issuedBy?.name;
+    },
+  },
+  {
+    label: "Returned To",
+    key: "returnedTo",
     renderDetail: (row) => {
       return row?.issuedBy?.name;
     },
@@ -72,6 +79,14 @@ const columns = [
       return new Date(date).toDateString();
     },
   },
+  {
+    label: "Return Date",
+    key: "returnDate",
+    renderDetail: (row) => {
+      const date = row.issueDate;
+      return new Date(date).toDateString();
+    },
+  },
 
   
 ];
@@ -114,7 +129,7 @@ const Transactions = () => {
 
       <Card customClass="bg-white border border-gray-300">
         <h4 className="text-2xl mb-4 font-bold">Transaction History</h4>
-        <Table data={transactions} columns={columns}/>
+        <Table data={transactions} columns={getTransactionColumn}/>
       </Card >
     </div>
   );
