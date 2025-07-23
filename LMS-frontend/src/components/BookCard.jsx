@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Card from "./common/Card";
 
-const BookCard = ({ book }) => {
+const BookCard = ({ book, handleBookClick }) => {
   const { title, author, publications, genre, availability, isbn } = book;
 
   return (
-    <Card customClass="
+    <Card onclick={handleBookClick} customClass="
   w-[400px]">
       <div>
         <div className="flex items-center justify-between">
