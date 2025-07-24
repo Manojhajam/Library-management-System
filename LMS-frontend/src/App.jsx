@@ -4,14 +4,18 @@ import Sidebar from "./components/Sidebar";
 import {BrowserRouter} from 'react-router'
 import PageRoutes from "./routes/Routes";
 import AuthProvider from "./context/AuthContext";
+import MemberProvider from "./context/MemberContext";
 
 const App = () => {
   return (
     <>
       <AuthProvider>
-        <BrowserRouter>
-          <PageRoutes/>
-        </BrowserRouter>
+        <MemberProvider>
+          <BrowserRouter>
+            <PageRoutes/>
+          </BrowserRouter>
+        </MemberProvider>
+        
       </AuthProvider> 
     </>
   );

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import BookCard from "../components/BookCard";
 import DashboardCard from "../components/DashboardCard";
 import { FiBook } from "react-icons/fi";
@@ -6,13 +6,15 @@ import { FiUsers } from "react-icons/fi";
 import { FiTrendingUp } from "react-icons/fi";
 import { FiClock } from "react-icons/fi";
 import Modal from "../components/common/Modal";
+import { MemberContext } from "../context/MemberContext";
 
 const Dashboard = () => {
-
+  const {members} = useContext(MemberContext)
   const [ books, setBooks] = useState([]);
   const [dashboard, setDashboardData] = useState([]);
   const [showBookModal, setShowBookModal] = useState(false)
   const [selectedBook, setSelectedBook] = useState(null)
+  const [issuanceData, setissuanceData] = useState([])
 
   const fetchBooks = async () => {
 
@@ -93,12 +95,17 @@ const Dashboard = () => {
           <div className="flex flex-col gap-2">
             <label htmlFor="email">Issue To</label>
             <select
-              // value={"user-2"}
+            value={issuanceData.issuedTo}
+            onChange={(e) => {
+              
+            }}
               className="w-1/2 p-2 rounded-lg border"
-            >
-              <option value={"user-1"}>User 1</option>
-              <option value={"user-2"}>User 2</option>
-              <option value={"user-3"}>User 3</option>
+          >
+            {members?.map((member) => {
+              return <option key={member?._id} value={member?._id}> { member?.name}</option>
+            })}
+              
+            
             </select>
           </div>
           <div className="flex justify-end mt-8">

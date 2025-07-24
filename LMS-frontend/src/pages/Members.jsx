@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Table from '../components/common/Table';
 import Card from '../components/common/Card';
+import { MemberContext } from '../context/MemberContext';
 
 
 const columns = [
@@ -38,35 +39,11 @@ const columns = [
 ];
 
 const Members = () => {
-const [members, setMembers] = useState([])
-
-  const fetchMembers = async () => {
-    try {
-    const token = localStorage.getItem("token");
-    const response = await fetch('http://localhost:5000/api/members', {
-      method: 'GET',
-      headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-    });
-
-    const responseData = await response.json();
-    console.log("Members", responseData)
-
-if (responseData.success) {
-  setMembers(responseData.data);
-}
-
-
-  } catch (error) {
-    console.log(error)
-  }
-  }
+// const [members, setMembers] = useState([])
+const { members } = useContext(MemberContext)
   
-  useEffect(() => {
-    fetchMembers();
-  },[])
+  
+  
 
   return <div className="px-2">
       <h1 className="text-5xl mb-8">Members</h1>
