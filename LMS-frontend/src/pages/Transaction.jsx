@@ -1,137 +1,152 @@
+
 import React, { useEffect, useState } from "react";
 import Table from "../components/common/Table";
 import Card from "../components/common/Card";
 
-const getTransactionColumn = [
-  {
-    label: "Book",
-    key: "book",
-    renderDetail: (row) => {
-      return row?.book?.title;
-    }
-  },
+const getTransactionsColumn = ({ returnBook }) => {
+  return [
     {
-    label: "Issued To",
-    key: "issuedTo",
-    renderDetail: (row) => {
-      return row?.issuedTo?.name;
+      label: "Book",
+      key: "book",
+      renderDetail: (row) => {
+        return row?.book?.title;
+      },
     },
-  },
-  {
-    label: "Issued By",
-    key: "issuedBy",
-    renderDetail: (row) => {
-      return row?.issuedBy?.name;
+    {
+      label: "Issued To",
+      key: "issuedTo",
+      renderDetail: (row) => {
+        return row?.issuedTo?.name;
+      },
     },
-  },
-  {
-    label: "Returned To",
-    key: "returnedTo",
-    renderDetail: (row) => {
-      return row?.issuedBy?.name;
+    {
+      label: "Issued By",
+      key: "issuedBy",
+      renderDetail: (row) => {
+        return row?.issuedBy?.name;
+      },
     },
-  },
-  {
-    label: "Returned",
-    key: "returned",
-   renderDetail: (row) => {
-      const returnBook = async () => {
-        try {
-          const token = localStorage.getItem("token");
-          const response = await fetch(
-            `http://localhost:5003/api/transactions/${row._id}/return`,
-            {
-              method: "PATCH",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
+    {
+      label: "Returned To",
+      key: "returnedTo",
+      renderDetail: (row) => {
+        return row?.returnedTo?.name || "-";
+      },
+    },
+    {
+      label: "Returned",
+      key: "returned",
 
-          const responseData = await response.json();
-
-          if (responseData.success) {
-            console.log(responseData);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-
-      return Boolean(row.returned) ? (
-        "Yes"
-      ) : (
-        <button
-          className="px-3 py-2 bg-green-300 hover:bg-green-300/90 rounded-lg cursor-pointer"
-          onClick={returnBook}
-        >
-          Return
-        </button>
-      );
+      renderDetail: (row) => {
+        return Boolean(row.returned) ? (
+          "Yes"
+        ) : (
+          <button
+            className="px-3 py-2 bg-green-300 hover:bg-green-300/90 rounded-lg cursor-pointer"
+            onClick={() => returnBook(row?._id)}
+          >
+            Return
+          </button>
+        );
+      },
     },
-  },
-  {
-    label: "Issue Date",
-    key: "issueDate",
-    renderDetail: (row) => {
-      const date = row.issueDate;
-      return new Date(date).toDateString();
+    {
+      label: "Issue Date",
+      key: "issueDate",
+      renderDetail: (row) => {
+        const date = row.issueDate;
+        return new Date(date).toDateString();
+      },
     },
-  },
-  {
-    label: "Return Date",
-    key: "returnDate",
-    renderDetail: (row) => {
-      const date = row.issueDate;
-      return new Date(date).toDateString();
+    {
+      label: "Return Date",
+      key: "returnDate",
+      renderDetail: (row) => {
+        const date = row.issueDdate;
+        return date ? new Date(date).toDateString() : "-";
+      },
     },
-  },
-
-  
-];
+  ];
+};
 
 const Transactions = () => {
+  const [transactions, setTransactions] = useState([]);
 
-  const [transactions, setTransactions] = useState([])
   const fetchTransactions = async () => {
     try {
-
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:5000/api/transaction", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       const responseData = await response.json();
+
       console.log(responseData);
 
-
       if (responseData.success) {
-        setTransactions(responseData.data)
-       }
-
+        setTransactions(responseData.data);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
+  const returnBook = async (transactionId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://localhost:5000/api/transaction/${transactionId}/return`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (responseData.success) {
+        console.log(responseData);
+
+        const updatedTransactions = transactions.map((transaction) => {
+          if (transaction?._id === responseData?.data?._id) {
+            return responseData.data;
+          }
+
+          return transaction;
+        });
+
+        setTransactions(updatedTransactions);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const columns = getTransactionsColumn({ returnBook });
+
   useEffect(() => {
     fetchTransactions();
-  },[]);
+  }, []);
 
   return (
-    <div className="px-2">
-      <h1 className="text-5xl mb-8">Transactions</h1>
-
-      <Card customClass="bg-white border border-gray-300">
-        <h4 className="text-2xl mb-4 font-bold">Transaction History</h4>
-        <Table data={transactions} columns={getTransactionColumn}/>
-      </Card >
-    </div>
+    <>
+      <div className="p-4 px-8  mb-8 shadow">
+        <h4 className="text-3xl font-semibold">Transactions</h4>
+      </div>
+      <div className="px-8">
+        <Card customClass="bg-white border border-gray-300">
+          <h5 className="text-2xl mb-4 font-bold">Transaction History</h5>
+          <Table columns={columns} data={transactions} />
+        </Card>
+      </div>
+    </>
   );
 };
 

@@ -270,3 +270,48 @@ export const getProfile = async (req, res) => {
     )
   }
 }
+
+
+export const updateRole = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const existingUser = await UserModel.findById(userId);
+    if (!existingUser)
+    {
+      return res.status(404).json({
+        success: false,
+        message: 'Can`t find user with requested id!'
+      })
+
+    }
+    if (existingUser.role === 'Admin') {
+      return res.status(400).json({
+        success: false,
+        message: "Can't update role of admin"
+      })
+    }
+
+     if (existingUser.role === 'Member') {
+      existingUser.role = 'Staff'
+     } else if (existingUser.role === 'Staff') {
+       existingUser.role = 'Member'
+    }
+    await existingUser.save();
+
+    //task remove password user details from here;
+
+    return res.status(201).json({
+      success: true,
+      data: existingUser,
+    })
+
+  } catch (error) {
+    console.log(error);
+    
+     res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
