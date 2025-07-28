@@ -8,6 +8,7 @@ import { FiClock } from "react-icons/fi";
 import Modal from "../components/common/Modal";
 import { MemberContext } from "../context/MemberContext";
 import Loader from "../components/common/Loader";
+import EditBookModal from "../components/EditBookModal";
 
 const Dashboard = () => {
   const {members} = useContext(MemberContext)
@@ -21,6 +22,8 @@ const Dashboard = () => {
     issuedTo: "",
     estimatedReturnDate: "",
   })
+  const [showEditBookModal, setShowEditBookModal] = useState(false);
+  const [toBeEditedBook, setToBeEditedBook] = useState(null)
 
   const fetchBooks = async () => {
 
@@ -68,19 +71,19 @@ const Dashboard = () => {
 
       const token = localStorage.getItem("token");
 
-      const response = fetch("http://localhost:5000/api/transaction", {
+      const response =await fetch("http://localhost:5000/api/transaction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          booId: selectedBook?._id,
+          bookId: selectedBook?._id,
           issuedTo: issuanceData.issuedTo,
         }),
       });
 
-      const responseData = (await response).json();
+      const responseData = await response.json();
 
       if (responseData.success) {
         const updatedBooks = books.map((book) => {
@@ -100,7 +103,48 @@ const Dashboard = () => {
     }
   };
   
-  
+  const handleEditBookClick = (book) => {
+    setToBeEditedBook(book)
+    setShowEditBookModal(true)
+  }
+
+  const handleEditBookSubmit = async (bookInfo) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://localhost:5000/api/books/${bookInfo?._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(bookInfo),
+        }
+      );
+       const responseData = await response.json();
+
+      console.log("response", responseData);
+
+      if (responseData.success) {
+        setShowEditBookModal(false);
+        setToBeEditedBook(null);
+        const updatedBooks = books.map((book) => {
+          if (book?._id === responseData?.data?._id) {
+            return responseData?.data;
+          }
+
+          return book;
+        });
+
+        setBooks(updatedBooks);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return <div className="px-4 pb-4">
       <h1 className="py-8 text-3xl font-bold ">
         Dashboard
@@ -125,11 +169,11 @@ const Dashboard = () => {
 
             <MemberContext>
               <BookCard key={book._id} book={book} handleBookClick={() => {
-            setShowBookModal(true);
-            setSelectedBook(book)
-          } } />
+                setShowBookModal(true);
+                setSelectedBook(book)
+              }}
+                handleEditBookClick={handleEditBookClick} />
             </MemberContext>
-            
           )
         })}
     </div>
@@ -184,8 +228,18 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-      </Modal>
-    </div>;
+    </Modal>
+
+    <EditBookModal
+      toBeEditedBook={toBeEditedBook}
+      open={showEditBookModal}
+      onClose={() => {
+          setShowEditBookModal(false);
+          setToBeEditedBook(null);
+      }}
+    onSubmit={handleEditBookSubmit}
+    />
+  </div>;
 };
 
 export default Dashboard;
