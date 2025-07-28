@@ -139,7 +139,7 @@ export const updateUser = async (req, res) => {
     });
 
     res.status(200).json({
-      success: false,
+      success: true,
       data: updatedUser,
       message: "User Updated Successfully"
     });
@@ -299,11 +299,13 @@ export const updateRole = async (req, res) => {
     }
     await existingUser.save();
 
-    //task remove password user details from here;
+    //task remove password user details from here
+    const userWithoutPassword = existingUser.toObject();
+    delete userWithoutPassword.password;
 
     return res.status(201).json({
       success: true,
-      data: existingUser,
+      data: userWithoutPassword,
     })
 
   } catch (error) {
