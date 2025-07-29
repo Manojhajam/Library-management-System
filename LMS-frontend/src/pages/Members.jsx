@@ -3,6 +3,8 @@ import Table from '../components/common/Table';
 import Card from '../components/common/Card';
 import { MemberContext } from '../context/MemberContext';
 import useAuth from '../hooks/useAuth';
+import { useEffect } from 'react';
+import { useMemo } from 'react';
 
 
 const getMemberColumns = ({updateRole, user}) => {
@@ -68,7 +70,7 @@ const getMemberColumns = ({updateRole, user}) => {
 }
 
 const Members = () => {
-// const [members, setMembers] = useState([])
+
   const { members,setMembers } = useContext(MemberContext)
   const { user } = useAuth()
   
@@ -100,8 +102,22 @@ const Members = () => {
       console.log(error)
     }
   }
+
+  const columns = useMemo(
+    () => 
+      getMemberColumns({
+      updateRole: handleUpdateMemberRole,
+        user
+      })
+    
+    [user]
+  )
+  // useEffect(() => {
+  //   const columns = 
+  //   
+  //   setColumns(columns)
+  // },[user])
   
-  const columns = getMemberColumns({updateRole: handleUpdateMemberRole, user})
 
   return <div className="px-2">
       <h1 className="text-5xl mb-8">Members</h1>

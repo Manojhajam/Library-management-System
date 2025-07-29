@@ -9,8 +9,10 @@ import Modal from "../components/common/Modal";
 import { MemberContext } from "../context/MemberContext";
 import Loader from "../components/common/Loader";
 import EditBookModal from "../components/EditBookModal";
+import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
+  const { user } = useAuth();
   const {members} = useContext(MemberContext)
   const [ books, setBooks] = useState([]);
   const [dashboard, setDashboardData] = useState([]);
@@ -147,7 +149,7 @@ const Dashboard = () => {
 
   return <div className="px-4 pb-4">
       <h1 className="py-8 text-3xl font-bold ">
-        Dashboard
+        Welcome {user?.name?.split(" ")[0]}
     </h1>
     
        <div className="flex justify-between mb-8">
