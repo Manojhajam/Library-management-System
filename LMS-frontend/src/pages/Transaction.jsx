@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Table from "../components/common/Table";
 import Card from "../components/common/Card";

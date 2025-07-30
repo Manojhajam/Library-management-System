@@ -48,20 +48,27 @@ const Dashboard = () => {
 
  try {
    setLoading(true);
+   const token = localStorage.getItem("token")
   const response = await fetch("http://localhost:5000/api/dashboard",{
     method: "GET",
+    headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
   });
 
   const responseData = await response.json();
     
   console.log(responseData);
-  
-  setDashboardData(responseData.data)
+   if (responseData.success) {
+     setDashboardData(responseData.data)
+   }
+   setLoading(false);
  } catch (error) {
    console.log(error)
    setLoading(false);
  }
-    };  
+};  
     
     useEffect(() => {
       fetchBooks();
@@ -152,12 +159,17 @@ const Dashboard = () => {
         Welcome {user?.name?.split(" ")[0]}
     </h1>
     
+    {user?.role !== "Member" && (
+      <>
        <div className="flex justify-between mb-8">
         <DashboardCard title="Books" count={dashboard?.bookCount} Icon={<FiBook size={38} color="blue" />} />
         <DashboardCard title="Members" count={dashboard?.membersCount} Icon={<FiUsers size={38} color="green" />} />
         <DashboardCard title="Issued Books" count={dashboard?.issuedBooksCount} Icon={<FiTrendingUp size={38} color="orange" />} />
         <DashboardCard title="Return Due" count={dashboard?.returnDueCount} Icon={<FiClock size={38} color="red" />} />
       </div> 
+      </>
+    )}
+      
     
       
 
@@ -245,3 +257,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+//Remove members and made profile

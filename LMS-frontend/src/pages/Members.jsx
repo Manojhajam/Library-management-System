@@ -5,7 +5,7 @@ import { MemberContext } from '../context/MemberContext';
 import useAuth from '../hooks/useAuth';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
-
+import { FiAlertTriangle } from 'react-icons/fi';
 
 const getMemberColumns = ({updateRole, user}) => {
   return [
@@ -107,18 +107,21 @@ const Members = () => {
     () => 
       getMemberColumns({
       updateRole: handleUpdateMemberRole,
-        user
-      })
-    
+        user,
+      }),
     [user]
   )
-  // useEffect(() => {
-  //   const columns = 
-  //   
-  //   setColumns(columns)
-  // },[user])
-  
 
+  
+  if (user?.role === "Member") {
+    return (
+      <div className="h-screen bg-red-50 flex flex-col gap-8 items-center justify-center  text-red-600">
+        <FiAlertTriangle size={50} />
+        <h3 className="text-xl">You are not authorized to access this page!</h3>
+      </div>
+  )
+}
+  
   return <div className="px-2">
       <h1 className="text-5xl mb-8">Members</h1>
       <Card customClass="bg-white border border-gray-300">

@@ -8,6 +8,8 @@ import Members from "../pages/Members";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
+import NotFoundPage from "../components/NotFounndPage";
+import Profile from "../pages/Profile";
 
 const PageRoutes = () => {
   return (
@@ -17,10 +19,12 @@ const PageRoutes = () => {
           <Route index element={<Dashboard />} />
           <Route path="/transactions" element={<Transaction />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="*" element={<NotFoundPage/>} />
     </Routes>
   );
 };

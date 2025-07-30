@@ -81,6 +81,7 @@ export const loginUser = async (req, res) => {
       }
 
       const userData = {
+        _id: foundUser._id,
         name: foundUser.name,
         email: foundUser.email,
         address: foundUser.address,
