@@ -3,6 +3,7 @@ import {BrowserRouter} from 'react-router'
 import PageRoutes from "./routes/Routes";
 import AuthProvider from "./context/AuthContext";
 import MemberProvider from "./context/MemberContext";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         </MemberProvider>
         
       </AuthProvider> 
+      <ToastContainer/>
     </>
   );
 };

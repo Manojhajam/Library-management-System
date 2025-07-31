@@ -1,22 +1,40 @@
 import { TransactionModel } from "../models/transactionModel.js";
 import { BookModel } from "../models/bookmodels.js";
 
-
 export const getTransaction = async (req, res) => {
   try {
+    if (user.role === "Member") {
+      const transactions = await TransactionModel.find()
+        .populate("issuedBy")
+        .populate("issuedTo")
+        .populate("book")
+        .populate("returnedTo")
+        .sort({
+          issueDate: -1,
+        });
+      res.status(200).json({
+        success: true,
+        data: transactions,
+      });
+    }
+
     const transactions = await TransactionModel.find()
-      .populate('issuedBy')
-      .populate('issuedTo')       
-      .populate("book");
+      .populate("issuedBy")
+      .populate("issuedTo")
+      .populate("book")
+      .populate("returnedTo")
+      .sort({
+        issueDate: -1,
+      });
 
     res.status(200).json({
       success: true,
-      data: transactions
+      data: transactions,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -26,30 +44,30 @@ export const createTransaction = async (req, res) => {
     const { bookId, issuedTo, estimatedReturnDate } = req.body;
     const requestiongUser = req.user;
     const defaultIssuanceAllowedDays = 14;
-    const defaultEstimatedReturnDate = new Date(Date.now() + defaultIssuanceAllowedDays * 24 * 60 * 60 * 1000).toISOString();
-
+    const defaultEstimatedReturnDate = new Date(
+      Date.now() + defaultIssuanceAllowedDays * 24 * 60 * 60 * 1000
+    ).toISOString();
 
     if (!bookId) {
       return res.status(400).json({
         success: false,
-        message: "No book issued if no book needed!"
+        message: "No book issued if no book needed!",
       });
     }
 
     if (!issuedTo) {
       return res.status(400).json({
         success: false,
-        message: "No book issued if no reader exists!"
+        message: "No book issued if no reader exists!",
       });
     }
-
 
     const bookExists = await BookModel.findById(bookId);
 
     if (!bookExists || !bookExists.availability) {
       return res.json({
         success: false,
-        message: "Requested Book is not available at the moment!"
+        message: "Requested Book is not available at the moment!",
       });
     }
 
@@ -58,29 +76,26 @@ export const createTransaction = async (req, res) => {
       issuedTo,
       book: bookId,
       status: requestiongUser.role === "Member" ? "Pending" : "Approved",
-      estimatedReturnDate: estimatedReturnDate || defaultEstimatedReturnDate
+      estimatedReturnDate: estimatedReturnDate || defaultEstimatedReturnDate,
     });
 
-    bookExists.availability = false;  //change one variable
+    bookExists.availability = false; //change one variable
     await bookExists.save();
 
-    
-     return res.status(201).json({
-          success: true,
-          data: newTransaction,
-      })
-
+    return res.status(201).json({
+      success: true,
+      data: newTransaction,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
 export const updatetransaction = async (req, res) => {
-
   try {
     const { transactionId } = req.body;
     if (!transactionId) {
@@ -119,8 +134,7 @@ export const updatetransaction = async (req, res) => {
       message: error.message,
     });
   }
-}
-
+};
 
 export const updateTransactionStatus = async (req, res) => {
   try {
@@ -130,14 +144,14 @@ export const updateTransactionStatus = async (req, res) => {
     if (!transactionId) {
       return res.status(400).json({
         success: false,
-        message: "Please mention the issue order!"
+        message: "Please mention the issue order!",
       });
     }
 
     if (!status) {
       return res.status(400).json({
         success: false,
-        message: "Updated status is required"
+        message: "Updated status is required",
       });
     }
 
@@ -146,7 +160,7 @@ export const updateTransactionStatus = async (req, res) => {
     if (!transaction) {
       return res.status(400).json({
         success: false,
-        message: "Looks like the issue order does not exist!"
+        message: "Looks like the issue order does not exist!",
       });
     }
 
@@ -157,19 +171,16 @@ export const updateTransactionStatus = async (req, res) => {
     return res.status(200).json({
       success: true,
       data: transaction,
-      message: "Issue order Updated Successfully"
+      message: "Issue order Updated Successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
-
-
-
 
 export const deleteTransaction = async (req, res) => {
   try {
@@ -178,7 +189,7 @@ export const deleteTransaction = async (req, res) => {
     if (!transactionId) {
       return res.status(400).json({
         success: false,
-        message: "Please mention the issue order!"
+        message: "Please mention the issue order!",
       });
     }
 
@@ -187,7 +198,7 @@ export const deleteTransaction = async (req, res) => {
     if (!transaction) {
       return res.status(400).json({
         success: false,
-        message: "Looks like the issue order doesnot exist!"
+        message: "Looks like the issue order doesnot exist!",
       });
     }
 
@@ -195,33 +206,34 @@ export const deleteTransaction = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Issue order deleted successfully!"
+      message: "Issue order deleted successfully!",
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
 };
-
 
 export const returnBook = async (req, res) => {
   try {
     const { transactionId } = req.params;
     // const { returnTo } = req.body;
-    const returnTo = req.user._id
+    const returnTo = req.user._id;
 
-    const foundTransaction = await TransactionModel.findById(transactionId).populate('book').populate('issuedTo').populate('issuedBy');
+    const foundTransaction = await TransactionModel.findById(transactionId)
+      .populate("book")
+      .populate("issuedTo")
+      .populate("issuedBy");
 
     if (!foundTransaction) {
       return res.status(400).json({
         success: false,
-        message: "No issue order found!!!"
-      })
+        message: "No issue order found!!!",
+      });
     }
-
 
     foundTransaction.returnDate = new Date(Date.now()).toISOString();
 
@@ -231,8 +243,7 @@ export const returnBook = async (req, res) => {
     const issuedBook = await BookModel.findById(foundTransaction.book);
 
     issuedBook.availability = true;
-    
-    
+
     await foundTransaction.save();
 
     await issuedBook.save();
@@ -240,14 +251,13 @@ export const returnBook = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Book returned successfully!!!",
-      data: foundTransaction
-    })
-
+      data: foundTransaction,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message
+      message: error.message,
     });
   }
-}
+};

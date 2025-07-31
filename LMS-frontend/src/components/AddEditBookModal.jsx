@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Modal from "./common/Modal";
 
-const EditBookModal = ({ open, toBeEditedBook, onClose, onSubmit }) => {
+const AddEditBookModal = ({
+  open,
+  toBeEditedBook,
+  onClose,
+  onSubmit,
+  modalTitle,
+}) => {
   const [bookInfo, setBookInfo] = useState(toBeEditedBook);
 
   useEffect(() => {
@@ -9,9 +15,11 @@ const EditBookModal = ({ open, toBeEditedBook, onClose, onSubmit }) => {
   }, [toBeEditedBook]);
 
   return (
-    <Modal open={open} onClose={onClose} title="Edit Book">
+    <Modal open={open} onClose={onClose} title={modalTitle}>
       <div className="p-2 bg-green-100 border border-green-300 rounded-lg">
-        <h5 className="font-semibold">{toBeEditedBook?.title}</h5>
+        <h5 className="font-semibold">
+          {toBeEditedBook?.title || "You are adding a New Book!"}
+        </h5>
       </div>
 
       <form className="mt-4 space-y-4">
@@ -93,4 +101,4 @@ const EditBookModal = ({ open, toBeEditedBook, onClose, onSubmit }) => {
   );
 };
 
-export default EditBookModal;
+export default AddEditBookModal;

@@ -9,7 +9,9 @@ const Profile = () => {
   const { user, setUser } = useAuth();
 
   const [editMode, setEditMode] = useState(false);
+  const [changePasswordMode, setChangePasswordMode] = useState(false);
   const [editedUserInfo, setEditedUserInfo] = useState(null);
+  const [passwordInfo, setPasswordInfo] = useState(null);
 
   const handleUpdateUser = async () => {
     const { response, error } = await makeApiRequest({
@@ -27,6 +29,24 @@ const Profile = () => {
       setUser(response.data);
       setEditMode(false);
       setEditedUserInfo(null);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    const { response, error } = await makeApiRequest({
+      endpoint: `/auth/${user?._id}`,
+      method: "PATCH",
+      body: passwordInfo,
+    });
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    if (response.success) {
+      setChangePasswordMode(false);
+      setPasswordInfo(null);
     }
   };
 
@@ -66,9 +86,20 @@ const Profile = () => {
             <p className="font-bold">Address</p>
             <p>{user?.address || "-"}</p>
           </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={() => {
+                setChangePasswordMode(true);
+              }}
+              className="p-2 bg-red-400 hover:bg-red-400/90 rounded-lg text-white cursor-pointer"
+            >
+              Change Password
+            </button>
+          </div>
         </Card>
         {editMode && (
-          <Card customClass="space-y-4 bg-white shadow border-none">
+          <Card customClass="space-y-4 bg-white shadow">
             <div className="flex justify-between items-center border-b pb-1">
               <h6 className="text-lg font-semibold">Edit Your Details</h6>
               <div className="flex gap-8">
@@ -129,6 +160,53 @@ const Profile = () => {
                   address: value,
                 });
               }}
+            />
+          </Card>
+        )}
+        {changePasswordMode && (
+          <Card customClass="space-y-4 bg-white shadow">
+            <div className="flex justify-between items-center border-b pb-1">
+              <h6 className="text-lg font-semibold">Edit Your Password</h6>
+              <div className="flex gap-8">
+                <button
+                  onClick={handleChangePassword}
+                  className="hover:bg-green-100 rounded-lg p-2 text-green-600 cursor-pointer"
+                >
+                  <FiCheck size={20} />
+                </button>
+                <button
+                  onClick={() => {
+                    setPasswordInfo(null);
+                    setChangePasswordMode(false);
+                  }}
+                  className="hover:bg-red-100 rounded-lg p-2 text-red-600 cursor-pointer"
+                >
+                  <FiX size={20} />
+                </button>
+              </div>
+            </div>
+
+            <Input
+              label={"Old Password"}
+              value={passwordInfo?.oldPassword}
+              onChange={(value) => {
+                setPasswordInfo({
+                  ...passwordInfo,
+                  oldPassword: value,
+                });
+              }}
+              type="password"
+            />
+            <Input
+              label={"New Password"}
+              value={passwordInfo?.newPassword}
+              onChange={(value) => {
+                setPasswordInfo({
+                  ...passwordInfo,
+                  newPassword: value,
+                });
+              }}
+              type="password"
             />
           </Card>
         )}

@@ -16,7 +16,8 @@ const bookSchema = new mongoose.Schema({
   },
   publications: {
     type: Date,
-    required: true
+    required: false,
+    default:Date.now()
   },
   genre: {
     type: String,
@@ -25,7 +26,7 @@ const bookSchema = new mongoose.Schema({
   noOfPages: Number,
   availability: {
     type: Boolean,
-    required : true
+    default : true
   }
 });
 

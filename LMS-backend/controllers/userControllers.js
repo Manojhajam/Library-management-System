@@ -197,7 +197,14 @@ export const updatePassword = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const { newPassword, oldPassword } = req.body;
+    const { newPassword, oldPassword } = req?.body;
+
+    if (!newPassword || !oldPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide all the fields"
+      })
+    }
   
     const foundUser = await UserModel.findById(userId);
   
