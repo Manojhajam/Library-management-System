@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "../components/common/Table";
 import Card from "../components/common/Card";
+import { makeApiRequest } from "../lib/api";
 
 const getTransactionsColumn = ({ returnBook }) => {
   return [
@@ -61,7 +62,7 @@ const getTransactionsColumn = ({ returnBook }) => {
       label: "Return Date",
       key: "returnDate",
       renderDetail: (row) => {
-        const date = row.issueDdate;
+        const date = row.returnDate;
         return date ? new Date(date).toDateString() : "-";
       },
     },
@@ -72,27 +73,44 @@ const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
 
   const fetchTransactions = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/transaction", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const responseData = await response.json();
-
-      console.log(responseData);
-
-      if (responseData.success) {
-        setTransactions(responseData.data);
-      }
-    } catch (error) {
-      console.error(error);
+    const { response, error } = await makeApiRequest({
+      endpoint: "/transaction",
+    })
+    
+    if (error) {
+      setLoading(false);
+      console.log(error);
+      return;
     }
-  };
+
+    if (response.success) {
+      setTransactions(response.data);
+    }
+    setLoading(false);
+}
+
+  // const fetchTransactions = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const response = await fetch("http://localhost:5000/api/transaction", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     const responseData = await response.json();
+
+  //     console.log(responseData);
+
+  //     if (responseData.success) {
+  //       setTransactions(responseData.data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const returnBook = async (transactionId) => {
     try {

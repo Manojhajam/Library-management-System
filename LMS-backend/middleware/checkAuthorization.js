@@ -6,9 +6,9 @@ export const checkAuthorization = async (req, res, next) => {
     try {
         // const token = req?.body?.token;
 
-       const token = req.headers.authorization?.split(" ").pop();
-       console.log("token", token)
-       
+        const token = req.cookies.token || req.headers.authorization?.split(" ").pop();
+        // console.log("token", token)
+        console.log(req.cookies);
 
         if (!token) {
             return res.json({

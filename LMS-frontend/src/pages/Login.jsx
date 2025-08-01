@@ -23,7 +23,8 @@ const [email, setEmail] = useState("")
         body: JSON.stringify({
           email: email,
           password
-        })
+        }),
+        credentials: "include",
       })
       const responseData =await response.json();
       console.log(responseData)

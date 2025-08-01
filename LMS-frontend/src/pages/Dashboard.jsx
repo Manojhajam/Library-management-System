@@ -83,7 +83,7 @@ const Dashboard = () => {
   const handleIssueBook = async () => {
    
   const { response, error } = await makeApiRequest({
-      endpoint: "/transactions",
+      endpoint: "/transaction",
       method: "POST",
       body: {
         bookId: selectedBook?._id,
@@ -229,6 +229,7 @@ const Dashboard = () => {
 )}
      
         
+    // Issue Book Modal
       
      <Modal
         open={showBookModal}
@@ -304,4 +305,4 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-//last ma add book garyaum
+//check transactions((getTransactions)) and profile

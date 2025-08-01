@@ -9,6 +9,7 @@ import dashboardRoutes from './routes/dashboardRoutes.js'
 import mongoose from "mongoose";
 import { connectToDB } from './config/db.js'
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser";
 
 
 const app = express();
@@ -22,7 +23,15 @@ const PORT = 5000;
 
 connectToDB();
 
-app.use(cors())
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
+app.use(cookieParser());
+
 app.use(express.json());
 
 app.get("/books", (req, res) => {

@@ -8,7 +8,7 @@ const BookCard = ({ book, handleBookClick, handleEditBookClick }) => {
   const { title, author, publications, genre, availability, isbn } = book;
 
   return <Card onclick={handleBookClick} customClass="
-  w-[400px]">
+  basis-1/3">
       <div>
         <div className="flex items-center justify-between">
           <h4 className="text-2xl font-bold mb-4 ">

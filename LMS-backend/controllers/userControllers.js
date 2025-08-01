@@ -1,5 +1,6 @@
 import { UserModel, validateUserSchema } from "../models/usermodels.js";
 import { generateToken } from "../utils/generateToken.js";
+import { sendAuthCookies } from "../utils/sendAuthCookies.js";
 
 
 export const registerUser = async (req, res) => {
@@ -90,6 +91,8 @@ export const loginUser = async (req, res) => {
         role: foundUser.role
       };
 
+      sendAuthCookies(token, res);
+
       return res.status(200).json({
         success: true,
         data: userData,
@@ -105,8 +108,8 @@ export const loginUser = async (req, res) => {
   }
   
   catch (error) {
-    console.status(500).log(error);
-    res.json({
+    console.log(error);
+    res.status(500).json({
       success: false,
       message: error.message
     });

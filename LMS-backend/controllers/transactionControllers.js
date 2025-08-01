@@ -3,16 +3,18 @@ import { BookModel } from "../models/bookmodels.js";
 
 export const getTransaction = async (req, res) => {
   try {
+    const user = req.user;
+
     if (user.role === "Member") {
-      const transactions = await TransactionModel.find()
+      const transactions = await TransactionModel.find({ issuedTo: user._id })
         .populate("issuedBy")
         .populate("issuedTo")
         .populate("book")
-        .populate("returnedTo")
-        .sort({
-          issueDate: -1,
+        .populate("returnTo").sort({
+          issueDate:-1
         });
-      res.status(200).json({
+
+      return res.json({
         success: true,
         data: transactions,
       });
@@ -22,10 +24,10 @@ export const getTransaction = async (req, res) => {
       .populate("issuedBy")
       .populate("issuedTo")
       .populate("book")
-      .populate("returnedTo")
+      .populate("returnTo")
       .sort({
         issueDate: -1,
-      });
+      });;
 
     res.status(200).json({
       success: true,
