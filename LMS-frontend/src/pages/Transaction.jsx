@@ -76,6 +76,7 @@ const Transactions = () => {
     const { response, error } = await makeApiRequest({
       endpoint: "/transaction",
     })
+  
     
     if (error) {
       setLoading(false);

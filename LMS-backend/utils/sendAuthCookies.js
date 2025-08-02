@@ -3,5 +3,6 @@ export const sendAuthCookies = (token, res) => {
     httpOnly: true,
     maxAge: 10 * 24 * 60 * 60 * 1000,
     sameSite: "lax",
+    secure: false,
   });
 };

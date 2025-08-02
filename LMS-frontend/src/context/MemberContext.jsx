@@ -10,13 +10,14 @@ const MemberProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const fetchMembers = async () => {
     try {
-      const token = localStorage.getItem("token");
+      // const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:5000/api/members", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        }
+          // Authorization: `Bearer ${token}`
+        },
+        credentials: "include",
       });
 
       const responseData = await response.json();

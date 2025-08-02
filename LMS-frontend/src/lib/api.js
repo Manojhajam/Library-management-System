@@ -9,6 +9,7 @@ export const makeApiRequest = async ({ endpoint, method = "GET", body }) => {
         Authorization: `Bearer ${token}`,
       },
       body: body ? JSON.stringify(body) : undefined,
+      credentials: "include"
     });
 
     const responseData = await response.json();

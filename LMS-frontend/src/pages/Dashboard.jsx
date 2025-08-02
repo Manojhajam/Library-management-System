@@ -11,13 +11,13 @@ import Loader from "../components/common/Loader";
 import AddEditBookModal from "../components/AddEditBookModal";
 import useAuth from "../hooks/useAuth";
 import { makeApiRequest } from "../lib/api";
-import {toast} from "react-toastify"
+
 
 const Dashboard = () => {
   const { user } = useAuth();
   const {members} = useContext(MemberContext)
   const [ books, setBooks] = useState([]);
-  const [dashboard, setDashboardData] = useState([]);
+  const [dashboardData, setDashboardData] = useState([]);
   
   const [loading, setLoading] = useState(true);
   const [booksLoading, setBooksLoading] = useState(true);
@@ -72,13 +72,11 @@ const Dashboard = () => {
     
     useEffect(() => {
       fetchBooks();
+      if(user?.role !== "Member")
       getDashboardData();
-    }, []);
+    }, [user]);
   
-  useEffect(() => {
-    if(books.length>0)
-    toast('Dashboard loaded successfully!!!')
-  },[books])
+
 
   const handleIssueBook = async () => {
    
@@ -107,6 +105,10 @@ const Dashboard = () => {
       setBooks(updatedBooks);
       setSelectedBook(null);
       setShowBookModal(false);
+      setDashboardData({
+        ...dashboardData,
+        issuedBooksCount: dashboardData.issuedBooksCount +1,
+      })
     }
   };
   
@@ -184,10 +186,10 @@ const Dashboard = () => {
     {user?.role !== "Member" && (
       <>
        <div className="flex justify-between mb-8">
-        <DashboardCard title="Books" count={dashboard?.bookCount} Icon={<FiBook size={38} color="blue" />} />
-        <DashboardCard title="Members" count={dashboard?.membersCount} Icon={<FiUsers size={38} color="green" />} />
-        <DashboardCard title="Issued Books" count={dashboard?.issuedBooksCount} Icon={<FiTrendingUp size={38} color="orange" />} />
-        <DashboardCard title="Return Due" count={dashboard?.returnDueCount} Icon={<FiClock size={38} color="red" />} />
+        <DashboardCard title="Books" count={dashboardData?.bookCount} Icon={<FiBook size={38} color="blue" />} />
+        <DashboardCard title="Members" count={dashboardData?.membersCount} Icon={<FiUsers size={38} color="green" />} />
+        <DashboardCard title="Issued Books" count={dashboardData?.issuedBooksCount} Icon={<FiTrendingUp size={38} color="orange" />} />
+        <DashboardCard title="Return Due" count={dashboardData?.returnDueCount} Icon={<FiClock size={38} color="red" />} />
       </div> 
       </>
     )}
@@ -197,12 +199,12 @@ const Dashboard = () => {
       <h2 className="mb-4 text-2xl font-semibold">
         Books ({books.length})
       </h2>
-      <button
-        onClick={() => 
+      {user.role !== "Member" && <button
+        onClick={() =>
           setshowAddBookModal(true)
         }
         className="bg-green-500 hover:bg-green-500/90 p-2 rounded-lg cursor-pointer text-white"
-      >Add Book</button>
+      >Add Book</button>}
       </div>
 
       
@@ -305,4 +307,6 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-//check transactions((getTransactions)) and profile
+//check Login API
+//deletebook in BookCard.jsx + dashboard.jsx
+//also check password wala   in profile
