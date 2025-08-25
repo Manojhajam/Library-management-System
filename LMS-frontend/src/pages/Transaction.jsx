@@ -87,63 +87,29 @@ const Transactions = () => {
     if (response.success) {
       setTransactions(response.data);
     }
-    setLoading(false);
+    
 }
 
-  // const fetchTransactions = async () => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const response = await fetch("http://localhost:5000/api/transaction", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-
-  //     const responseData = await response.json();
-
-  //     console.log(responseData);
-
-  //     if (responseData.success) {
-  //       setTransactions(responseData.data);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const returnBook = async (transactionId) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://localhost:5000/api/transaction/${transactionId}/return`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+    const { error, response } = await makeApiRequest({
+      endpoint: `/transaction/${transactionId}/return`,
+      method: "PATCH",
+    });
+
+    if (error) {
+      return;
+    }
+
+    if (response.success) {
+      const updatedTransactions = transactions.map((transaction) => {
+        if (transaction?._id === response?.data?._id) {
+          return response.data;
         }
-      );
 
-      const responseData = await response.json();
+        return transaction;
+      });
 
-      if (responseData.success) {
-        console.log(responseData);
-
-        const updatedTransactions = transactions.map((transaction) => {
-          if (transaction?._id === responseData?.data?._id) {
-            return responseData.data;
-          }
-
-          return transaction;
-        });
-
-        setTransactions(updatedTransactions);
-      }
-    } catch (error) {
-      console.log(error);
+      setTransactions(updatedTransactions);
     }
   };
 

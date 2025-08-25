@@ -29,8 +29,7 @@ const BookCard = ({ book, handleBookClick, handleEditBookClick }) => {
     <>
     <Card
       onclick={handleBookClick}
-      customClass="
-  basis-1/3"
+      customClass="w-[398px]"
     >
       <div>
         <div className="flex items-center justify-between">

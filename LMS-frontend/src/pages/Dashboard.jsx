@@ -214,7 +214,7 @@ const Dashboard = () => {
         <Loader fullscreen={false} />
       </div>
     ) : (
-      <div className="flex gap-6 flex-wrap">
+      <div className="flex gap-5 flex-wrap">
         {books.map(book => {
           return (
 

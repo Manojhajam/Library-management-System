@@ -18,7 +18,7 @@ export const registerUser = async (req, res) => {
     const foundUser = await UserModel.find({ email: reqBody.email });
 
     if (foundUser.length > 0) {
-      return res.status(409).json({
+      return res.status(403).json({
         success: false,
         message: `User with email: ${reqBody.email} already exits`
       });

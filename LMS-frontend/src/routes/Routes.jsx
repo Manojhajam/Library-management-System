@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router";
 import Dashboard from "../pages/Dashboard";
-import Sidebar from "../components/Sidebar";
 import Layout from "./Layout";
 import Transaction from "../pages/Transaction";
 import Members from "../pages/Members";
