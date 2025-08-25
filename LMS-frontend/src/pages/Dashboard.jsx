@@ -117,6 +117,27 @@ const Dashboard = () => {
     setShowEditBookModal(true)
   }
 
+  const handleDeleteBook = async () => {
+    const { response, error } = await makeApiRequest({
+      endpoint: `/books/${id}`,
+      method: "DELETE"
+    })
+     if (error) {
+       console.log(error);
+       return;
+    }
+     onSuccess();
+    if (response.success) {
+      const updatedBook = books.filter((book) => book?._id !== id);
+
+      setBooks(updatedBook);
+      setDashboardData({
+        ...dashboardData,
+        bookCount: dashboardData.bookCount - 1,
+      });
+    }
+  }
+
   const handleEditBookSubmit = async (bookInfo) => {
     try {
       const token = localStorage.getItem("token");
@@ -231,7 +252,7 @@ const Dashboard = () => {
 )}
      
         
-    // Issue Book Modal
+    {/*  Issue Book Modal */}
       
      <Modal
         open={showBookModal}
@@ -307,6 +328,3 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-//check Login API
-//deletebook in BookCard.jsx + dashboard.jsx
-//also check password wala   in profile
