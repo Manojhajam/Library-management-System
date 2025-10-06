@@ -7,8 +7,8 @@ import { makeApiRequest } from "../lib/api";
 
 
 const BookCard = ({ book, handleBookClick, handleEditBookClick }) => {
-  const [showDeleteModal, setshowDeleteModal] = useState(false);
-  const [toBeDeletedBook, setToBeDeletedBook] = useState(null)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [toBeDeletedBook, setToBeDeletedBook] = useState(null);
   const { user } = useAuth();
   const { title, author, publications, genre, availability, isbn } = book;
 
@@ -22,7 +22,7 @@ const BookCard = ({ book, handleBookClick, handleEditBookClick }) => {
       return;
     }
     setToBeDeletedBook(null);
-    setshowDeleteModal(false)
+    setShowDeleteModal(false)
   }
 
   return (
@@ -66,7 +66,7 @@ const BookCard = ({ book, handleBookClick, handleEditBookClick }) => {
                 <div
                   onClick={(e) => {
                     e.stopPropagation();
-                    setshowDeleteModal(true);
+                    setShowDeleteModal(true);
                     setToBeDeletedBook(book);
                   }}
                   className="hover:bg-green-100 p-1 rounded-lg text-green-500"
